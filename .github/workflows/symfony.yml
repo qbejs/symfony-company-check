@@ -33,11 +33,5 @@ jobs:
                 run: |
                     composer global require friendsofphp/php-cs-fixer
                     ~/.composer/vendor/bin/php-cs-fixer fix src/ --rules=@Symfony,@PSR12 --dry-run
-            -   uses: sonarsource/sonarqube-scan-action@master
-                with:
-                    args: ${{ secrets.SONAR_ARGS }}
-                env:
-                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
             -   name: Execute tests (Unit and Feature tests) via PHPUnit
                 run: vendor/bin/phpunit
