@@ -1,0 +1,7 @@
+App\Domain\Models\ValueObject\Company\CompanyKrs:
+    type: embeddable
+    fields:
+        krs:
+            type: string
+            length: 20
+            nullable: true

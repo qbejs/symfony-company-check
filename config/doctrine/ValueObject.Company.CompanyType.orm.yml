@@ -1,0 +1,6 @@
+App\Domain\Models\ValueObject\Company\CompanyType:
+    type: embeddable
+    fields:
+        type:
+            type: string
+            length: 255

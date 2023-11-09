@@ -1,0 +1,42 @@
+# config/doctrine/Company.orm.yml
+App\Domain\Models\Company:
+    type: entity
+    table: companies
+    id:
+        id:
+            associationKey: true
+    fields:
+        createdAt:
+            type: datetime
+        updatedAt:
+            type: datetime
+            nullable: true
+        deletedAt:
+            type: datetime
+            nullable: true
+    embedded:
+        id:
+            class: App\Domain\Models\ValueObject\Company\CompanyId
+            columnPrefix: false
+        foundingDate:
+            class: App\Domain\Models\ValueObject\Company\CompanyFoundingDate
+            columnPrefix: false
+        name:
+            class: App\Domain\Models\ValueObject\Company\CompanyName
+            columnPrefix: false
+        address:
+            class: App\Domain\Models\ValueObject\Company\CompanyAddress
+            columnPrefix: false
+        regon:
+            class: App\Domain\Models\ValueObject\Company\CompanyRegon
+            columnPrefix: false
+        krs:
+            class: App\Domain\Models\ValueObject\Company\CompanyKrs
+            columnPrefix: false
+        nip:
+            class: App\Domain\Models\ValueObject\Company\CompanyNip
+            columnPrefix: false
+        type:
+            class: App\Domain\Models\ValueObject\Company\CompanyType
+            columnPrefix: false
+

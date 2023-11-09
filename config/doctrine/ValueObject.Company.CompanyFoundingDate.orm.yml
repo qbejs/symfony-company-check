@@ -1,0 +1,6 @@
+App\Domain\Models\ValueObject\Company\CompanyFoundingDate:
+    type: embeddable
+    fields:
+        foundingDate:
+            type: datetime
+            nullable: true

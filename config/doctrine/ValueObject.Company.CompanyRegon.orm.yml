@@ -1,0 +1,6 @@
+App\Domain\Models\ValueObject\Company\CompanyRegon:
+    type: embeddable
+    fields:
+        regon:
+            type: string
+            length: 20

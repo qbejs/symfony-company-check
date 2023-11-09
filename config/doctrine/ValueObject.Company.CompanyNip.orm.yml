@@ -1,0 +1,6 @@
+App\Domain\Models\ValueObject\Company\CompanyNip:
+    type: embeddable
+    fields:
+        nip:
+            type: string
+            length: 20

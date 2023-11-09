@@ -1,0 +1,6 @@
+# Repository
+services:
+    App\Domain\Interface\CompanyRepositoryInterface:
+        class: App\Infrastructure\Repository\Doctrine\CompanyRepository
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'

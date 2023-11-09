@@ -1,0 +1,37 @@
+# config/packages/messenger.yaml
+framework:
+    messenger:
+        default_bus: messenger.bus.commands
+
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+#                options:
+#                    queue_name: async_queue
+            sync:
+                dsn: 'sync://'
+                options:
+                    queue_name: sync_queue
+
+
+        buses:
+            messenger.bus.commands:
+                middleware:
+                    - messenger.middleware.validation
+                    - messenger.middleware.doctrine_transaction
+            messenger.bus.events:
+                middleware:
+                    - messenger.middleware.validation
+                    - messenger.middleware.doctrine_transaction
+            messenger.bus.queries:
+                middleware:
+                    - messenger.middleware.validation
+                    - messenger.middleware.doctrine_transaction
+
+        routing:
+            # Command
+            'App\Application\RegonCheck\Command\CheckCompanyCommand': sync
+            'App\Application\RegonCheck\Command\CreateCompanyCommand': sync
+            # Query
+            'App\Application\RegonCheck\Query\GetVerifiedCompaniesQuery': sync
+            'App\Application\RegonCheck\Query\GetVerifiedCompanyQuery': sync

@@ -1,0 +1,20 @@
+# config/doctrine/CompanyAddress.orm.yml
+App\Domain\Models\ValueObject\Company\CompanyAddress:
+    type: embeddable
+    fields:
+        street:
+            type: string
+            length: 255
+        buildingNumber:
+            type: string
+            length: 10
+            nullable: true
+        zipCode:
+            type: string
+            length: 6
+        province:
+            type: string
+            length: 100
+        city:
+            type: string
+            length: 100

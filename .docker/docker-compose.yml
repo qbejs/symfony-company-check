@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+    db:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+            - "db_app:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - 3306:3306
+        networks:
+            - symfony
+    php:
+        build:
+            context: ./php
+            args:
+                TIMEZONE: ${TIMEZONE}
+        volumes:
+            - ../:/var/www/symfony/
+        networks:
+            - symfony
+    rabbitmq:
+        image: rabbitmq:3.9-management-alpine
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - symfony
+        volumes:
+            - "redis_data:/data"
+    nginx:
+        build:
+            context: ./nginx
+        volumes:
+            - ../:/var/www/symfony/
+        ports:
+            - 80:80
+        networks:
+            - symfony
+        env_file:
+            - .env.nginx.local
+        depends_on:
+            -   rabbitmq
+
+volumes:
+    db_app:
+    redis_data:
+
+networks:
+    symfony:

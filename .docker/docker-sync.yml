@@ -1,0 +1,18 @@
+version: "2"
+
+options:
+    compose-file-path: "docker-compose.yml"
+    verbose: true
+
+syncs:
+    symfony_dockerized_app_sync:
+        src: "../"
+        sync_userid: "33"
+        sync_excludes:
+            - ".docker"
+            - ".git"
+            - "var"
+        watch_excludes:
+            - ".docker"
+            - ".git"
+            - "var"

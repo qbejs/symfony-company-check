@@ -1,0 +1,8 @@
+App\Domain\Models\ValueObject\Company\CompanyId:
+    type: embeddable
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO

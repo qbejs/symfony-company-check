@@ -1,0 +1,80 @@
+imports:
+    - { resource: 'services/repositories.yaml'}
+    - { resource: 'services/serializers.yaml'}
+
+parameters:
+    gus.api_key: '%env(GUS_KEY)%'
+
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/*'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Application/'
+            - '../src/Domain/'
+            - '../src/Infrastructure/'
+            - '../src/UI/'
+
+    App\UI\Controller\:
+        resource: '../src/UI/Controller/*'
+        tags: [ 'controller.service_arguments' ]
+
+    App\Application\:
+        resource: '../src/Application/*'
+        tags: [ 'app.service' ]
+
+    App\Domain\:
+        resource: '../src/Domain/*'
+        tags: [ 'app.domain' ]
+
+    App\Infrastructure\:
+        resource: '../src/Infrastructure/*'
+        exclude:
+            - '../src/Infrastructure/{DependencyInjection,Entity,Migrations,Tests}'
+        tags: [ 'app.infrastructure' ]
+
+    App\Infrastructure\Doctrine\Persistence\Listener\TimestampListener:
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: prePersist }
+
+    _instanceof:
+        App\Domain\Interface\DataProviderInterface:
+            tags: [ 'app.data_provider' ]
+
+    App\Infrastructure\DataProviders\Adapters\GusProvider:
+        arguments:
+            $apiKey: '%gus.api_key%'
+
+    App\Infrastructure\EventSubscriber\ExceptionSubscriber:
+        public: true
+        arguments:
+            $logger: '@logger'
+            $responseHelper: '@App\Infrastructure\Helper\ResponseHelper'
+        tags:
+            - { name: kernel.event_subscriber, priority: 200 }
+
+    App\Infrastructure\Validator\Constraint\RegonNumberValidator:
+        tags:
+            - { name: 'validator.constraint_validator', alias: 'regon_validator' }
+
+    App\Infrastructure\Validator\Constraint\NipNumberValidator:
+        tags:
+            - { name: 'validator.constraint_validator', alias: 'nip_validator' }
+
+    App\Infrastructure\Validator\Constraint\KrsNumberValidator:
+        tags:
+            - { name: 'validator.constraint_validator', alias: 'krs_validator' }
+
+
+
+
+
+
