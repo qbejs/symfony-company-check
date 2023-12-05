@@ -2,16 +2,16 @@
 
 namespace App\Application\RegonCheck\Service;
 
-use App\Application\RegonCheck\Command\CreateCompanyCommand;
+use App\Application\RegonCheck\Event\CreateCompanyEvent;
 use App\Domain\Interface\CompanyRepositoryInterface;
 use App\Domain\Interface\ServiceInterface;
 use App\Domain\Models\Company;
 use App\Infrastructure\DataProviders\DataProviderManager;
 use App\Infrastructure\Exception\LockedResponseException;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class RegonCheckService implements ServiceInterface
@@ -20,8 +20,8 @@ class RegonCheckService implements ServiceInterface
         private readonly CompanyRepositoryInterface $companyRepository,
         private readonly PaginatorInterface $paginator,
         private readonly DataProviderManager $dataProviderManager,
-        private readonly MessageBusInterface $messageBus,
         private readonly LockFactory $lockFactory,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -55,7 +55,7 @@ class RegonCheckService implements ServiceInterface
         }
 
         foreach ($result as $company) {
-            $this->messageBus->dispatch(new CreateCompanyCommand($company));
+            $this->eventDispatcher->dispatch(new CreateCompanyEvent($company));
         }
 
         return true;
@@ -75,8 +75,6 @@ class RegonCheckService implements ServiceInterface
             $page,
             $limit
         );
-
-        // dd($result->getItems());
 
         return $result->getItems();
     }

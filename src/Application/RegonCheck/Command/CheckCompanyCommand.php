@@ -11,6 +11,10 @@ class CheckCompanyCommand
 
     public function __construct(ValidateCompanyDTO $dto)
     {
+        if (!$dto->nip && !$dto->krs && !$dto->regon) {
+            throw new \Exception('Cannot determine company type. No number provided.');
+        }
+
         if ($dto->nip) {
             $this->number = $dto->nip;
             $this->type = 'nip';

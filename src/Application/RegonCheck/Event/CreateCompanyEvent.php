@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\RegonCheck\Command;
+namespace App\Application\RegonCheck\Event;
 
 use App\Domain\Models\DTO\CreateCompanyDTO;
 
-class CreateCompanyCommand
+class CreateCompanyEvent
 {
     public string $name;
     public string $type;

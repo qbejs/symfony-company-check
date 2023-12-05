@@ -30,8 +30,7 @@ framework:
 
         routing:
             # Command
-            'App\Application\RegonCheck\Command\CheckCompanyCommand': sync
-            'App\Application\RegonCheck\Command\CreateCompanyCommand': sync
+            'App\Application\RegonCheck\Command\CheckCompanyCommand': async
             # Query
             'App\Application\RegonCheck\Query\GetVerifiedCompaniesQuery': sync
             'App\Application\RegonCheck\Query\GetVerifiedCompanyQuery': sync
