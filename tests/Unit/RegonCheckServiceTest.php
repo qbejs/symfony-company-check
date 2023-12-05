@@ -3,6 +3,7 @@
 namespace App\Tests\Unit;
 
 use App\Application\RegonCheck\Command\CreateCompanyCommand;
+use App\Application\RegonCheck\Event\CreateCompanyEvent;
 use App\Application\RegonCheck\Service\RegonCheckService;
 use App\Domain\Interface\CompanyRepositoryInterface;
 use App\Domain\Models\DTO\CreateCompanyDTO;
@@ -10,6 +11,7 @@ use App\Infrastructure\DataProviders\DataProviderManager;
 use App\Infrastructure\Exception\LockedResponseException;
 use Knp\Component\Pager\PaginatorInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -23,11 +25,11 @@ class RegonCheckServiceTest extends TestCase
         $companyRepository = $this->createMock(CompanyRepositoryInterface::class);
         $paginator = $this->createMock(PaginatorInterface::class);
         $dataProviderManager = $this->createMock(DataProviderManager::class);
-        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus = $this->createMock(EventDispatcherInterface::class);
         $lockFactory = $this->createMock(LockFactory::class);
         $lock = $this->createMock(LockInterface::class);
 
-        $service = new RegonCheckService($companyRepository, $paginator, $dataProviderManager, $messageBus, $lockFactory);
+        $service = new RegonCheckService($companyRepository, $paginator, $dataProviderManager, $lockFactory, $messageBus);
 
         // Create a CreateCompanyDTO object
         $dto = new CreateCompanyDTO(
@@ -51,7 +53,7 @@ class RegonCheckServiceTest extends TestCase
         $messageBus->expects($this->exactly(1))
             ->method('dispatch')
             ->with($this->callback(function ($command) {
-                return $command instanceof CreateCompanyCommand;
+                return $command instanceof CreateCompanyEvent;
             }))
             ->willReturnCallback(function ($command) {
                 return new \Symfony\Component\Messenger\Envelope($command);
@@ -66,10 +68,10 @@ class RegonCheckServiceTest extends TestCase
         $companyRepository = $this->createMock(CompanyRepositoryInterface::class);
         $paginator = $this->createMock(PaginatorInterface::class);
         $dataProviderManager = $this->createMock(DataProviderManager::class);
-        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus = $this->createMock(EventDispatcherInterface::class);
         $lockFactory = $this->createMock(LockFactory::class);
 
-        $service = new RegonCheckService($companyRepository, $paginator, $dataProviderManager, $messageBus, $lockFactory);
+        $service = new RegonCheckService($companyRepository, $paginator, $dataProviderManager, $lockFactory, $messageBus);
 
         $envelope = new Envelope(new \stdClass(), [new HandledStamp('result', 'handler')]);
 
