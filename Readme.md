@@ -68,5 +68,5 @@ With Docker, you can ensure the application runs in the same environment regardl
     symfony server:start
     ```
 
-That's it! Your translation microservice should now be running on `http://127.0.0.1:8000`.
+That's it! Your GUS data provider should now be running on `http://127.0.0.1:8000`.
 
